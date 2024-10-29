@@ -29,6 +29,29 @@
             padding: 2rem;
             width: 90%;
             max-width: 400px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
         }
 
         h1 {
@@ -70,6 +93,11 @@
 
         button:hover {
             background-color: #5a6fd6;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         p {
@@ -82,22 +110,47 @@
             background: none;
             color: #667eea;
             text-decoration: underline;
-            width: auto;
             padding: 5px;
+            font-size: 14px;
         }
 
         #sign-up:hover, #return-btn:hover {
             color: #5a6fd6;
+            background-color: rgba(102, 126, 234, 0.1);
+            border-radius: 3px;
         }
 
         #create-acct {
             display: none;
         }
 
-        .error {
-            color: red;
-            font-size: 0.8em;
-            margin-bottom: 10px;
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: -8px;
+            margin-bottom: 8px;
+            display: none;
+        }
+
+        .success-message {
+            color: #28a745;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .custom-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
@@ -106,8 +159,11 @@
         <div id="main">
             <h1>Welcome Back</h1>
             <input id="email" type="email" placeholder="Email" required>
+            <div class="error-message" id="email-error"></div>
             <input id="password" type="password" placeholder="Password" required>
+            <div class="error-message" id="password-error"></div>
             <button id="submit">Sign In</button>
+            <div class="success-message" id="login-success">Successfully logged in!</div>
             <p>Don't have an account? <button id="sign-up">Sign Up</button></p>
         </div>
 
@@ -115,19 +171,23 @@
             <h1>Create Account</h1>
             <input id="email-signup" type="email" placeholder="Email" required>
             <input id="confirm-email-signup" type="email" placeholder="Confirm Email" required>
+            <div class="error-message" id="email-match-error"></div>
             <input id="password-signup" type="password" placeholder="Password" required>
             <input id="confirm-password-signup" type="password" placeholder="Confirm Password" required>
+            <div class="error-message" id="password-match-error"></div>
             <button id="create-acct-btn">Create Account</button>
+            <div class="success-message" id="signup-success">Account created successfully!</div>
             <p><button id="return-btn">Return to Login</button></p>
         </div>
     </div>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    <div class="custom-message" id="custom-message"></div>
 
-        // Your web app's Firebase configuration
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+        import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyBYU-7Omeog-LwI50eUhSjWjJMJ9tVgc2w",
             authDomain: "mark50-9deb6.firebaseapp.com",
@@ -140,7 +200,11 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
+
+        // Ensure persistence is set to local storage
+        setPersistence(auth, browserLocalPersistence);
 
         // Get Elements
         const submitButton = document.getElementById("submit");
@@ -158,58 +222,105 @@
 
         const returnBtn = document.getElementById("return-btn");
 
-        // Sign up button press
-        signupButton.addEventListener("click", function() {
-            main.style.display = "none";
-            createacct.style.display = "block";
-        });
+        // Error/Success messages
+        const emailError = document.getElementById("email-error");
+        const passwordError = document.getElementById("password-error");
+        const emailMatchError = document.getElementById("email-match-error");
+        const passwordMatchError = document.getElementById("password-match-error");
+        const customMessage = document.getElementById("custom-message");
 
-        // Return button press
-        returnBtn.addEventListener("click", function() {
-            main.style.display = "block";
-            createacct.style.display = "none";
-        });
+        function showMessage(message) {
+            customMessage.textContent = message;
+            customMessage.style.display = "block";
+            setTimeout(() => {
+                customMessage.style.opacity = "1";
+            }, 10);
+            setTimeout(() => {
+                customMessage.style.opacity = "0";
+                setTimeout(() => {
+                    customMessage.style.display = "none";
+                }, 500);
+            }, 3000);
+        }
 
-        // Create account button press
+        // Create Account Event
         createacctbtn.addEventListener("click", function() {
-            let emailsMatch = signupEmailIn.value === confirmSignupEmailIn.value;
-            let passwordsMatch = signupPasswordIn.value === confirmSignUpPasswordIn.value;
+            var isVerified = true;
 
-            if (emailsMatch && passwordsMatch) {
-                createUserWithEmailAndPassword(auth, signupEmailIn.value, signupPasswordIn.value)
+            const signupEmail = signupEmailIn.value;
+            const confirmSignupEmail = confirmSignupEmailIn.value;
+            const signupPassword = signupPasswordIn.value;
+            const confirmSignUpPassword = confirmSignUpPasswordIn.value;
+
+            if (signupEmail !== confirmSignupEmail) {
+                emailMatchError.style.display = "block";
+                emailMatchError.textContent = "Emails do not match";
+                isVerified = false;
+            } else {
+                emailMatchError.style.display = "none";
+            }
+
+            if (signupPassword !== confirmSignUpPassword) {
+                passwordMatchError.style.display = "block";
+                passwordMatchError.textContent = "Passwords do not match";
+                isVerified = false;
+            } else {
+                passwordMatchError.style.display = "none";
+            }
+
+            if (isVerified) {
+                createUserWithEmailAndPassword(auth, signupEmail, signupPassword)
                     .then((userCredential) => {
-                        // Account created successfully
-                        const user = userCredential.user;
-                        alert("Account created successfully!");
-                        main.style.display = "block";
-                        createacct.style.display = "none";
+                        showMessage("Account created successfully!");
+                        setTimeout(() => {
+                            main.style.display = "block";
+                            createacct.style.display = "none";
+                        }, 1000);
                     })
                     .catch((error) => {
-                        // Handle errors
-                        alert("Error: " + error.message);
+                        const errorMessage = error.message;
+                        emailMatchError.style.display = "block";
+                        emailMatchError.textContent = errorMessage;
                     });
-            } else {
-                if (!emailsMatch) {
-                    alert("Emails do not match");
-                }
-                if (!passwordsMatch) {
-                    alert("Passwords do not match");
-                }
             }
         });
 
-        // Sign in button press
+        // Sign In Event
         submitButton.addEventListener("click", function() {
-            signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed in successfully
-                    const user = userCredential.user;
-                    alert("Signed in successfully!");
+                    showMessage("Successfully logged in!");
+                    setTimeout(() => {
+                        window.location.href = "home.html"; // Redirect to home page
+                    }, 1000);
                 })
                 .catch((error) => {
-                    // Handle errors
-                    alert("Error: " + error.message);
+                    const errorMessage = error.message;
+                    passwordError.style.display = "block";
+                    passwordError.textContent = errorMessage;
                 });
+        });
+
+        // Toggle between Sign In and Create Account
+        signupButton.addEventListener("click", function() {
+            main.style.animation = "fadeOut 0.5s ease forwards";
+            setTimeout(() => {
+                main.style.display = "none";
+                createacct.style.display = "block";
+                createacct.style.animation = "fadeIn 0.5s ease forwards";
+            }, 500);
+        });
+
+        returnBtn.addEventListener("click", function() {
+            createacct.style.animation = "fadeOut 0.5s ease forwards";
+            setTimeout(() => {
+                createacct.style.display = "none";
+                main.style.display = "block";
+                main.style.animation = "fadeIn 0.5s ease forwards";
+            }, 500);
         });
     </script>
 </body>
