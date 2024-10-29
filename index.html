@@ -1,228 +1,216 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    body {
-      background-color: #0583D2;
-    }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    h1 {
-      margin-bottom: 8%;
-      text-align: center;
-      font-family: "Fredoka One", cursive;
-      color: #0583D2;
-      letter-spacing: 0.1em;
-    }
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+        }
 
-    p {
-      margin-top: 5%;
-      margin-bottom: 5%;
-      width: 100%;
-      text-align: center;
-      border-bottom: 1px solid #000;
-      line-height: 0.1em;
-    }
+        h1 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #333;
+            font-weight: 600;
+        }
 
-    p span {
-      background:#fff;
-      padding:0 10px;
-    }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
 
-    input {
-      margin-bottom: 3%;
-    }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
 
-    input:last-of-type {
-      margin-bottom: 0;
-    }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #667eea;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-    input, button {
-      padding: 3%;
-      width: 100%;
-    }
+        button:hover {
+            background-color: #5a6fd6;
+        }
 
-    .login-container {
-      background-color: white;
-      padding: 7%;
-      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-      width: 40vw;
-      margin-left: 30vw;
-      height: 70vh;
-      margin-top: 15vh;
-    }
+        p {
+            text-align: center;
+            margin: 1rem 0;
+            color: #666;
+        }
 
-    #submit, #create-acct-btn {
-      background-color: #0583D2;
-      color: white;
-      border: none;
-      margin-top: 5%;
-    }
+        #sign-up, #return-btn {
+            background: none;
+            color: #667eea;
+            text-decoration: underline;
+            width: auto;
+            padding: 5px;
+        }
 
-    button:hover {
-      cursor: pointer;
-      opacity: 0.8;
-      transition: 0.3s;
-    }
+        #sign-up:hover, #return-btn:hover {
+            color: #5a6fd6;
+        }
 
-    #sign-up {
-      border: none;
-    }
+        #create-acct {
+            display: none;
+        }
 
-    #main {
-      display: block;
-    }
-
-    #create-acct {
-      display: none;
-    }
-
-    #return-btn {
-      background: none;
-      color: grey;
-      text-decoration: underline;
-      border: none;
-      margin-top: 3%;
-    }
-  </style>
+        .error {
+            color: red;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="login-container">
-    <div id="main">
-      <h1>Sign In</h1>
-      <input id="email" type="text" placeholder="Email">
-      <input id="password" type="password" placeholder="Password">
-      <button id="submit">Submit</button>
-      <p><span>or</span></p>
-      <button id="sign-up">Sign Up</button>
+    <div class="login-container">
+        <div id="main">
+            <h1>Welcome Back</h1>
+            <input id="email" type="email" placeholder="Email" required>
+            <input id="password" type="password" placeholder="Password" required>
+            <button id="submit">Sign In</button>
+            <p>Don't have an account? <button id="sign-up">Sign Up</button></p>
+        </div>
+
+        <div id="create-acct">
+            <h1>Create Account</h1>
+            <input id="email-signup" type="email" placeholder="Email" required>
+            <input id="confirm-email-signup" type="email" placeholder="Confirm Email" required>
+            <input id="password-signup" type="password" placeholder="Password" required>
+            <input id="confirm-password-signup" type="password" placeholder="Confirm Password" required>
+            <button id="create-acct-btn">Create Account</button>
+            <p><button id="return-btn">Return to Login</button></p>
+        </div>
     </div>
 
-    <div id="create-acct">
-      <h1>Create an Account</h1>
-      <input id="email-signup" type="text" placeholder="Email *">
-      <input id="confirm-email-signup" type="email" placeholder="Confirm Email *">
-      <input id="password-signup" type="password" placeholder="Password *">
-      <input id="confirm-password-signup" type="password" placeholder="Confirm Password *">
-      <button id="create-acct-btn">Create Account</button>
-      <button id="return-btn">Return to Login</button>
-    </div>
-  </div>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBYU-7Omeog-LwI50eUhSjWjJMJ9tVgc2w",
+            authDomain: "mark50-9deb6.firebaseapp.com",
+            projectId: "mark50-9deb6",
+            storageBucket: "mark50-9deb6.appspot.com",
+            messagingSenderId: "204077388461",
+            appId: "1:204077388461:web:51e05bc7879365baab6c24",
+            measurementId: "G-PYP04FYCSG"
+        };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBYU-7Omeog-LwI50eUhSjWjJMJ9tVgc2w",
-      authDomain: "mark50-9deb6.firebaseapp.com",
-      projectId: "mark50-9deb6",
-      storageBucket: "mark50-9deb6.appspot.com",
-      messagingSenderId: "204077388461",
-      appId: "1:204077388461:web:51e05bc7879365baab6c24",
-      measurementId: "G-PYP04FYCSG"
-    };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
+        // Get Elements
+        const submitButton = document.getElementById("submit");
+        const signupButton = document.getElementById("sign-up");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const main = document.getElementById("main");
+        const createacct = document.getElementById("create-acct");
 
-    const submitButton = document.getElementById("submit");
-    const signupButton = document.getElementById("sign-up");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const main = document.getElementById("main");
-    const createacct = document.getElementById("create-acct");
+        const signupEmailIn = document.getElementById("email-signup");
+        const confirmSignupEmailIn = document.getElementById("confirm-email-signup");
+        const signupPasswordIn = document.getElementById("password-signup");
+        const confirmSignUpPasswordIn = document.getElementById("confirm-password-signup");
+        const createacctbtn = document.getElementById("create-acct-btn");
 
-    const signupEmailIn = document.getElementById("email-signup");
-    const confirmSignupEmailIn = document.getElementById("confirm-email-signup");
-    const signupPasswordIn = document.getElementById("password-signup");
-    const confirmSignUpPasswordIn = document.getElementById("confirm-password-signup");
-    const createacctbtn = document.getElementById("create-acct-btn");
+        const returnBtn = document.getElementById("return-btn");
 
-    const returnBtn = document.getElementById("return-btn");
-
-    var email, password, signupEmail, signupPassword, confirmSignupEmail, confirmSignUpPassword;
-
-    createacctbtn.addEventListener("click", function() {
-      var isVerified = true;
-
-      signupEmail = signupEmailIn.value;
-      confirmSignupEmail = confirmSignupEmailIn.value;
-      if(signupEmail != confirmSignupEmail) {
-          window.alert("Email fields do not match. Try again.")
-          isVerified = false;
-      }
-
-      signupPassword = signupPasswordIn.value;
-      confirmSignUpPassword = confirmSignUpPasswordIn.value;
-      if(signupPassword != confirmSignUpPassword) {
-          window.alert("Password fields do not match. Try again.")
-          isVerified = false;
-      }
-      
-      if(signupEmail == null || confirmSignupEmail == null || signupPassword == null || confirmSignUpPassword == null) {
-        window.alert("Please fill out all required fields.");
-        isVerified = false;
-      }
-      
-      if(isVerified) {
-        createUserWithEmailAndPassword(auth, signupEmail, signupPassword)
-          .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          // ...
-          window.alert("Success! Account created.");
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
-          window.alert("Error occurred. Try again.");
+        // Sign up button press
+        signupButton.addEventListener("click", function() {
+            main.style.display = "none";
+            createacct.style.display = "block";
         });
-      }
-    });
 
-    submitButton.addEventListener("click", function() {
-      email = emailInput.value;
-      console.log(email);
-      password = passwordInput.value;
-      console.log(password);
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log("Success! Welcome back!");
-          window.alert("Success! Welcome back!");
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log("Error occurred. Try again.");
-          window.alert("Error occurred. Try again.");
+        // Return button press
+        returnBtn.addEventListener("click", function() {
+            main.style.display = "block";
+            createacct.style.display = "none";
         });
-    });
 
-    signupButton.addEventListener("click", function() {
-        main.style.display = "none";
-        createacct.style.display = "block";
-    });
+        // Create account button press
+        createacctbtn.addEventListener("click", function() {
+            let emailsMatch = signupEmailIn.value === confirmSignupEmailIn.value;
+            let passwordsMatch = signupPasswordIn.value === confirmSignUpPasswordIn.value;
 
-    returnBtn.addEventListener("click", function() {
-        main.style.display = "block";
-        createacct.style.display = "none ";
-    });
-  </script>
+            if (emailsMatch && passwordsMatch) {
+                createUserWithEmailAndPassword(auth, signupEmailIn.value, signupPasswordIn.value)
+                    .then((userCredential) => {
+                        // Account created successfully
+                        const user = userCredential.user;
+                        alert("Account created successfully!");
+                        main.style.display = "block";
+                        createacct.style.display = "none";
+                    })
+                    .catch((error) => {
+                        // Handle errors
+                        alert("Error: " + error.message);
+                    });
+            } else {
+                if (!emailsMatch) {
+                    alert("Emails do not match");
+                }
+                if (!passwordsMatch) {
+                    alert("Passwords do not match");
+                }
+            }
+        });
+
+        // Sign in button press
+        submitButton.addEventListener("click", function() {
+            signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+                .then((userCredential) => {
+                    // Signed in successfully
+                    const user = userCredential.user;
+                    alert("Signed in successfully!");
+                })
+                .catch((error) => {
+                    // Handle errors
+                    alert("Error: " + error.message);
+                });
+        });
+    </script>
 </body>
 </html>
