@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBYU-7Omeog-LwI50eUhSjWjJMJ9tVgc2w",
+            authDomain: "mark50-9deb6.firebaseapp.com",
+            projectId: "mark50-9deb6",
+            storageBucket: "mark50-9deb6.appspot.com",
+            messagingSenderId: "204077388461",
+            appId: "1:204077388461:web:51e05bc7879365baab6c24"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="errorMessage"></div>
+        <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign up</a></p>
+    </div>
+    <div class="signup-container" style="display:none;">
+        <h2>Sign Up</h2>
+        <form id="signupForm">
+            <input type="text" id="signupUsername" placeholder="Username" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <div id="signupErrorMessage"></div>
+    </div>
+    <div id="contentContainer" style="display:none;">
+        <h2 id="welcomeMessage"></h2>
+        <div id="classContent"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
